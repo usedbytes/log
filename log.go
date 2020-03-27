@@ -3,25 +3,56 @@
 package log
 
 import (
+	"fmt"
+	"os"
 	"log"
 )
 
 var verbose bool
+var uselog bool = true
 
 func SetVerbose(v bool) {
 	verbose = v
 }
 
-func Fatal(args ...interface{}) {
-	log.Fatal(args)
+func SetUseLog(v bool) {
+	uselog = v
+}
+
+func Fatalln(args ...interface{}) {
+	Println(args)
+	os.Exit(1)
 }
 
 func Println(args ...interface{}) {
-	log.Println(args...)
+	if uselog {
+		log.Println(args...)
+	} else {
+		fmt.Println(args...)
+	}
+}
+
+func Print(args ...interface{}) {
+	if uselog {
+		log.Print(args...)
+	} else {
+		fmt.Print(args...)
+	}
 }
 
 func Printf(args ...interface{}) {
-	log.Printf(args[0].(string), args[1:]...)
+	if uselog {
+		log.Printf(args[0].(string), args[1:]...)
+	} else {
+		fmt.Printf(args[0].(string), args[1:]...)
+	}
+}
+
+func Verbose(args ...interface{}) {
+	if !verbose {
+		return
+	}
+	Print(append([]interface{}{"VERBOSE:"}, args...)...)
 }
 
 func Verboseln(args ...interface{}) {
